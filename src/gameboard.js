@@ -1,7 +1,7 @@
 import { matrix } from "./matrix";
 
 export const gameBoard = (function () {
-  const _n = 3;
+  let _n = 3;
 
   let _board = matrix(_n, _n);
 
@@ -25,6 +25,13 @@ export const gameBoard = (function () {
     return _board.getMatrix();
   }
 
+  function setBoardSize(size) {
+    _n = size;
+    _board = matrix(_n, _n);
+    erase();
+  }
+
   erase();
-  return { getN, setField, getField, erase, getBoard };
+
+  return { getN, setField, getField, erase, getBoard, setBoardSize };
 })();

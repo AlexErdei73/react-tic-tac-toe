@@ -1,3 +1,4 @@
+import React from "react";
 import "./Scores.css";
 
 const Scores = (props) => {
@@ -12,14 +13,17 @@ const Scores = (props) => {
     padding: "0 50px",
   };
 
+  const activePlayer = isANext ? nameA : nameB;
+  const nextPlayerName = isANext ? nameB : nameA;
+
   return (
     <div className="score-bar">
       <div className="names">
         <h3 className="name">
-          <span style={isANext ? activeStyle : {}}>{nameA}</span>
+          <span style={isANext ? activeStyle : {}}>{nameA} (Symbol : X)</span>
         </h3>
         <h3 className="name">
-          <span style={isANext ? {} : activeStyle}>{nameB}</span>
+          <span style={isANext ? {} : activeStyle}>{nameB} (Symbol : O)</span>
         </h3>
       </div>
       <div className="scores">

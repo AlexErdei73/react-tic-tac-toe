@@ -10,9 +10,9 @@ import MessageDlg from "./components/MessageDlg";
 import FormDlg from "./components/FormDlg";
 
 function App() {
-  /* New stuff for the React UI */
   const [showMesage, setShowMessage] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [extendClicked, setExtendClicked] = useState(false);
 
   function handleCloseMsgDlg() {
     start();
@@ -23,7 +23,6 @@ function App() {
     setShowForm(false);
   }
 
-  /* Old tic-tac-toe gameControl module code slightly rewritten */
   const playerA = players.playerA;
   const human = players.human;
 
@@ -120,13 +119,13 @@ function App() {
 
   function incScore() {
     const win = winner();
-    if (win != "tie") {
+    if (win !== "tie") {
       getPlayerNext().incScore();
     }
   }
 
   function computerMove() {
-    if (!state.isComputerPlaying || getPlayerNext() == playerA) return;
+    if (!state.isComputerPlaying || getPlayerNext() === playerA) return;
     const bestMove = computer.bestMove();
     move(bestMove.col, bestMove.row);
   }
@@ -151,16 +150,12 @@ function App() {
 
   function isGameOver() {
     const win = winner();
-    if (win != "") {
-      return true;
-    } else {
-      return false;
-    }
+    return win !== "";
   }
 
   function message(winner) {
     let message = "";
-    if (winner == "tie") {
+    if (winner === "tie") {
       message = "It is a tie!";
     } else {
       message = getPlayerNext().name + " is the winner!";
@@ -179,7 +174,7 @@ function App() {
   function start() {
     newState.isGameStopped = false;
     showScores();
-    if (newState.isComputerPlaying && getPlayerNext() != playerA) {
+    if (newState.isComputerPlaying && getPlayerNext() !== playerA) {
       toggleNext();
       showNames();
       showNextPlayer();
@@ -189,7 +184,7 @@ function App() {
   }
 
   function updateNames(nameA, nameB) {
-    if (nameA != nameB && nameA != "" && nameB != "") {
+    if (nameA !== nameB && nameA !== "" && nameB !== "") {
       playerA.name = nameA;
       human.name = nameB;
     }
@@ -200,6 +195,21 @@ function App() {
     playerA.delScore();
     getPlayerB().delScore();
     start();
+  }
+
+  function handleExtendButtonClick() {
+    setExtendClicked(!extendClicked);
+    if (!extendClicked) {
+      gameBoard.setBoardSize(10);
+      newState = {
+        ...newState,
+        isComputerPlaying: false,
+      };
+      setState(newState);
+    } else {
+      gameBoard.setBoardSize(3);
+      reset();
+    }
   }
 
   return (
@@ -216,21 +226,23 @@ function App() {
       </header>
       <Board board={state.board} handleClick={move} />
       <div className="buttons">
-        <button className="button" style={{ pointerEvents: "none" }}>
-          Extended Mode
+        <button className="button" onClick={handleExtendButtonClick}>
+          {extendClicked ? "Shrink" : "Extend"}
         </button>
+        {!extendClicked && (
+          <button
+            className="button"
+            onClick={() => {
+              toggleOpponent();
+              showNames();
+              reset();
+            }}
+          >
+            AI
+          </button>
+        )}
         <button className="button" onClick={reset}>
           RESET
-        </button>
-        <button
-          className="button"
-          onClick={() => {
-            toggleOpponent();
-            showNames();
-            reset();
-          }}
-        >
-          AI
         </button>
         <button className="button" onClick={() => setShowForm(true)}>
           Change Names
